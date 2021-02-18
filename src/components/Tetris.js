@@ -19,7 +19,7 @@ const Tetris = ({ type }) => {
     const [gameOver, setGameOver] = useState(false);
 
     // get the getters/setters from our custom hooks
-    const [player] = usePlayer();
+    const [player, updatePlayerPos, resetPlayer] = usePlayer();
     const [stage, setStage] = useStage();
 
     console.log('re-rendered game');

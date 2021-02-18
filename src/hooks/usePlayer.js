@@ -1,7 +1,8 @@
 // React Hooks should begin with 'use'
 
 // we only need useState from react
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { STAGE_WIDTH } from '../gameHelpers';
 
 import { randomTetromino } from "../tetrominos";
 
@@ -18,8 +19,26 @@ export const usePlayer = () => {
         collided: false
     });
 
+    // a helper function that updates player position
+    // it usese the setter function generated above
+    const updatePlayerPos = ({x, y, collided}) => {
+        setPlayer(prev => ({
+            ...prev,
+            pos: { x: (prev.pos.x += x), y: prev.pos.y += y},
+            collided
+        }));
+    }
+
+    const resetPlayer = useCallback(() => {
+        setPlayer({
+            pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+            tetromino: randomTetromino().shape,
+            collided: false
+        })
+    }, [])
+
     // we will import this hook into the tetris component
     // by returning the player setter, we can then use the return
     // value to query the player state in tetris component
-    return [player];
+    return [player, updatePlayerPos, resetPlayer];
 }
