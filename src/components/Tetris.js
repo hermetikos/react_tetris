@@ -24,8 +24,69 @@ const Tetris = ({ type }) => {
 
     console.log('re-rendered game');
 
+    // a callback that manages user keypresses
+    const move = ({ keyCode }) => {
+        // these controls hold during gameplay,
+        // so check if we're in game over
+        if(!gameOver) {
+            // left arrow
+            if (keyCode === 37) {
+                // move left
+                movePlayer(-1);
+            }
+            // right arrow
+            else if (keyCode === 39) {
+                // move right
+                movePlayer(1);
+            }
+            // down key
+            else if (keyCode === 40) {
+                // drop the piece
+                dropPlayer();
+            }
+        }
+    }
+
+    // update the position of the falling teromino
+    const movePlayer = dir => {
+        updatePlayerPos({ x: dir, y: 0 });
+    }
+
+    const startGame = () => {
+        // reset everything
+        setStage(createStage());
+        resetPlayer();
+    }
+
+    // drop the tetromino to the base
+    const drop = () => {
+        updatePlayerPos({
+            x: 0, y: 1,
+            collided: false
+        })
+    }
+
+    const dropPlayer = () => {
+        drop();
+    }
+
     return (
-        <StyledTetrisWrapper>
+        <StyledTetrisWrapper role="button" tabIndex="0"
+            onKeyDown={e => move(e)}>
+            {/*
+                role="button" is used to identify the purpose of the element
+                notably accessibility software
+                tabIndex="0"
+                tab index sets the order which tabbing accesses elements
+                -1 means inaccessible through tab
+                0 is the first tabable element
+                and then any positive int is visited in order
+                (so tab item 3 comes after 0 but before 5)
+
+                Note we use the wrapper because since it is the top element,
+                it allows us to click anywhere in the screen to capture input
+                rather than a specific element
+            */}
             <StyledTetris>
                 <Stage stage={stage}/>
                 <aside>
@@ -37,10 +98,9 @@ const Tetris = ({ type }) => {
                             <Display text="rows" />
                             <Display text="level" />
                         </div>
-                    )
-                    }
+                    )}
                     
-                    <StartButton />
+                    <StartButton onClick={startGame}/>
                 </aside>
             </StyledTetris>
         </StyledTetrisWrapper>
