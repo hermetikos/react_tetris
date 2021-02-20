@@ -20,7 +20,7 @@ const Tetris = ({ type }) => {
 
     // get the getters/setters from our custom hooks
     const [player, updatePlayerPos, resetPlayer] = usePlayer();
-    const [stage, setStage] = useStage();
+    const [stage, setStage] = useStage(player);
 
     console.log('re-rendered game');
 
