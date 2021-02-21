@@ -43,7 +43,7 @@ export const useStage = (player, resetPlayer) => {
 
         // call the stage setter using the above instructions
         setStage(prev => updateStage(prev))
-    }, [player.collided, player.pos.x, player.pos.y, player.tetromino]);
+    }, [player]);
 
     // this hook will allow us to both read and alter the stage state
     // so return both the getter and the setter
