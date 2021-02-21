@@ -4,7 +4,7 @@
 import { useState, useCallback } from 'react';
 import { STAGE_WIDTH } from '../gameHelpers';
 
-import { randomTetromino } from "../tetrominos";
+import { TETROMINOS, randomTetromino } from "../tetrominos";
 
 export const usePlayer = () => {
     // use state returns an array with two values
@@ -15,7 +15,7 @@ export const usePlayer = () => {
     // note we can set default state by passing a value to useState
     const [player, setPlayer] = useState({
         pos: { x: 0, y: 0},
-        tetromino: randomTetromino().shape,
+        tetromino: TETROMINOS[0].shape,
         collided: false
     });
 
