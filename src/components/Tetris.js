@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // components
-import { createStage } from '../gameHelpers';
+import { createStage, checkCollision } from '../gameHelpers';
 import Stage from './Stage';
 import Display from './Display';
 import StartButton from "./StartButton";
@@ -20,7 +20,7 @@ const Tetris = ({ type }) => {
 
     // get the getters/setters from our custom hooks
     const [player, updatePlayerPos, resetPlayer] = usePlayer();
-    const [stage, setStage] = useStage(player);
+    const [stage, setStage] = useStage(player, resetPlayer);
 
     console.log('re-rendered game');
 
@@ -49,21 +49,36 @@ const Tetris = ({ type }) => {
 
     // update the position of the falling teromino
     const movePlayer = dir => {
-        updatePlayerPos({ x: dir, y: 0 });
+        // only move if we aren't colliding with anything
+        if (!checkCollision(player, stage, {x: dir, y: 0})) {
+            updatePlayerPos({ x: dir, y: 0 });
+        }
     }
 
     const startGame = () => {
         // reset everything
         setStage(createStage());
         resetPlayer();
+        setGameOver(false);
     }
 
     // drop the tetromino to the base
     const drop = () => {
+      if(!checkCollision(player, stage, { x: 0, y: 1})) {
         updatePlayerPos({
-            x: 0, y: 1,
-            collided: false
-        })
+          x: 0, y: 1,
+          collided: false
+        });
+      } else {
+        if (player.pos.y < 1) {
+          console.log("Game Over");
+          setGameOver(true);
+          setDropTime(null);
+        }
+
+        updatePlayerPos({ x: 0, y: 0, collided: true});
+      }
+        
     }
 
     const dropPlayer = () => {

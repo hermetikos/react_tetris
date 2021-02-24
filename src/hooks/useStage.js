@@ -38,12 +38,17 @@ export const useStage = (player, resetPlayer) => {
                 });
             });
 
-            return newStage 
+            // do collision detection
+            if (player.collided) {
+                resetPlayer();
+            }
+
+            return newStage;
         }
 
         // call the stage setter using the above instructions
         setStage(prev => updateStage(prev))
-    }, [player]);
+    }, [player, player.collided]);
 
     // this hook will allow us to both read and alter the stage state
     // so return both the getter and the setter
