@@ -39,6 +39,9 @@ export const useStage = (player, resetPlayer) => {
             });
 
             // do collision detection
+            // if the current falling piece collided with something, 
+            // we should stop moving the current piece
+            // and bring a new one to the top of the play field
             if (player.collided) {
                 resetPlayer();
             }

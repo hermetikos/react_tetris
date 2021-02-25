@@ -57,28 +57,40 @@ const Tetris = ({ type }) => {
 
     const startGame = () => {
         // reset everything
+
+        // clear the stage
         setStage(createStage());
+        // bring a new piece to the top of the stage
         resetPlayer();
+        // set game over to false
         setGameOver(false);
     }
 
-    // drop the tetromino to the base
+    // attempt to drop the tetromino down one level
     const drop = () => {
-      if(!checkCollision(player, stage, { x: 0, y: 1})) {
-        updatePlayerPos({
-          x: 0, y: 1,
-          collided: false
-        });
-      } else {
-        if (player.pos.y < 1) {
-          console.log("Game Over");
-          setGameOver(true);
-          setDropTime(null);
-        }
+        // if the space below is free...
+        if(!checkCollision(player, stage, { x: 0, y: 1})) {
+            // move the piece down
+            updatePlayerPos({
+            x: 0, y: 1,
+            collided: false
+            });
+        // otherwise...
+        } else {
+            // if we have stacked pieces up to the top
+            // (that is, position 0 in the stage grid)...
+            if (player.pos.y < 1) {
+                // we are in the game over state
+                console.log("Game Over");
+                setGameOver(true);
+                // we should also clear the drop time
+                setDropTime(null);
+            }
 
-        updatePlayerPos({ x: 0, y: 0, collided: true});
-      }
-        
+            // if nothing else holds, that means this piece has
+            // been obstructed and should stop moving
+            updatePlayerPos({ x: 0, y: 0, collided: true});
+        }
     }
 
     const dropPlayer = () => {

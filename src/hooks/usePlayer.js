@@ -46,7 +46,7 @@ export const usePlayer = () => {
             tetromino: randomTetromino().shape,
             collided: false
         })
-    }, [])
+    }, []);
 
     // we will import this hook into the tetris component
     // by returning the player setter, we can then use the return

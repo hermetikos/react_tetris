@@ -19,14 +19,19 @@ export const checkCollision = (player, stage, { x: moveX, y: moveY}) => {
         for (let x = 0; x < player.tetromino[y].length; x += 1) {
             // 1. check that we're in a non-empty cell
             if (player.tetromino[y][x] !== 0) {
+                console.log(`new x: ${x + player.pos.x + moveX} new y: ${y + player.pos.y + moveY}`)
+                const newX = x + player.pos.x + moveX;
+                const newY = y + player.pos.y + moveY;
                 if(
                     // 2. check the new position is within the game area's height
-                    !stage[y + player.pos.y + moveY] || 
+                    !stage[newY] || 
+                    // newY >= 0 && newY < stage.length &&
                     // 3. check we're within the game area's width
-                    !stage[y + player.pos.y + moveY][x + player.pos.x + moveX] ||
+                    !stage[newY][newX] ||
+                    // newX >= 0 && newX < stage[0].length &&
                     // 4. check we are not colliding with a placed tetromino
                     // this is done by checking if the cell is NOT set to 'clear'
-                    stage[y + player.pos.y + moveY][x + player.pos.x + moveX][1] !== 'clear'
+                    stage[newY][newX][1] !== 'clear'
                 ) {
                     return true;
                 }
