@@ -19,7 +19,7 @@ const Tetris = ({ type }) => {
     const [gameOver, setGameOver] = useState(false);
 
     // get the getters/setters from our custom hooks
-    const [player, updatePlayerPos, resetPlayer] = usePlayer();
+    const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
     const [stage, setStage] = useStage(player, resetPlayer);
 
     console.log('re-rendered game');
@@ -43,6 +43,10 @@ const Tetris = ({ type }) => {
             else if (keyCode === 40) {
                 // drop the piece
                 dropPlayer();
+            }
+            // up key
+            else if (keyCode === 38) {
+                playerRotate(stage, 1);
             }
         }
     }

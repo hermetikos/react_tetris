@@ -19,6 +19,27 @@ export const usePlayer = () => {
         collided: false
     });
 
+    // performs a rotation on a matrix
+    const rotate = (matrix, dir) => {
+        // make the rows into columns (transpose)
+        const rotatedTetromino = matrix.map((_, index) => 
+            matrix.map(col => col[index]),
+        )
+        // then reverse each row (if applicable)
+        // this will give the rotated matrix
+        if (dir > 0) return rotatedTetromino.map(row => row.reverse());
+        return rotatedTetromino;
+    }
+
+    // performs a rotation of a tetromino
+    // and handles any collision that occurs
+    const playerRotate = (stage, dir) => {
+        const copiedTetromino = { ...player };
+        copiedTetromino.tetromino = rotate(copiedTetromino.tetromino, dir);
+
+        setPlayer(copiedTetromino);
+    }
+
     // a helper function that updates player position
     // it usese the setter function generated above
     const updatePlayerPos = ({x, y, collided}) => {
@@ -51,5 +72,5 @@ export const usePlayer = () => {
     // we will import this hook into the tetris component
     // by returning the player setter, we can then use the return
     // value to query the player state in tetris component
-    return [player, updatePlayerPos, resetPlayer];
+    return [player, updatePlayerPos, resetPlayer, playerRotate];
 }
