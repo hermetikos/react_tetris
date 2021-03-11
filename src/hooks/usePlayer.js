@@ -1,8 +1,8 @@
 // React Hooks should begin with 'use'
 
 // we only need useState from react
-import { useState, useCallback } from 'react';
-import { STAGE_WIDTH } from '../gameHelpers';
+import { useState, useCallback, cloneElement } from 'react';
+import { checkCollision, STAGE_WIDTH } from '../gameHelpers';
 
 import { TETROMINOS, randomTetromino } from "../tetrominos";
 
@@ -34,8 +34,33 @@ export const usePlayer = () => {
     // performs a rotation of a tetromino
     // and handles any collision that occurs
     const playerRotate = (stage, dir) => {
-        const copiedTetromino = { ...player };
+        // const copiedTetromino = { ...player };
+        const copiedTetromino = JSON.parse(JSON.stringify(player));
         copiedTetromino.tetromino = rotate(copiedTetromino.tetromino, dir);
+
+        const position = copiedTetromino.pos.x;        
+        let offset = 1;
+        // this works by "projecting" the current piece left and right slightly
+        // if the current piece can't fit to the left or right,
+        // we shouldn't allow for rotation
+        while(checkCollision(copiedTetromino, stage, { x: 0, y: 0})) {
+            // initially, we move the piece right by 1
+            copiedTetromino.pos.x += offset;
+
+            // basically, this routine shifts the tetromino back and forth
+            // but if we are offset beyond the size of the teromino
+            // and we are still colliding with something,
+            // we can't rotate the piece in the current position
+            // because there simply isn't room.
+            offset = -(offset + (offset > 0 ? 1 : -1));
+
+            if (offset > copiedTetromino.tetromino[0].length) {
+                // rotate(copiedTetromino.tetromino, -dir);
+                // copiedTetromino.pos.x = position;
+
+                return;
+            }
+        }
 
         setPlayer(copiedTetromino);
     }
