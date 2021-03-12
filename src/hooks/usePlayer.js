@@ -35,7 +35,8 @@ export const usePlayer = () => {
     // and handles any collision that occurs
     const playerRotate = (stage, dir) => {
         // const copiedTetromino = { ...player };
-        const copiedTetromino = JSON.parse(JSON.stringify(player));
+        // const copiedTetromino = JSON.parse(JSON.stringify(player));
+        const copiedTetromino = { ...player, pos: { ...player.pos}, tetromino: [...player.tetromino] }
         copiedTetromino.tetromino = rotate(copiedTetromino.tetromino, dir);
 
         const position = copiedTetromino.pos.x;        
