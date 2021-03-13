@@ -99,7 +99,20 @@ const Tetris = ({ type }) => {
         }
     }
 
+    // this resets the drop speed if we release the down key
+    const keyUp = ({keyCode}) => {
+        if(!gameOver) {
+            if (keyCode === 40) {
+                console.log("Interval On");
+                setDropTime(1000);
+            }
+        }
+    }
+
     const dropPlayer = () => {
+        // while we manually drop pieces, we want to stop the timed drop
+        console.log("Interval Off");
+        setDropTime(null);
         drop();
     }
 
@@ -110,7 +123,9 @@ const Tetris = ({ type }) => {
 
     return (
         <StyledTetrisWrapper role="button" tabIndex="0"
-            onKeyDown={e => move(e)}>
+            onKeyDown={e => move(e)}
+            onKeyUp={keyUp}
+            >
             {/*
                 role="button" is used to identify the purpose of the element
                 notably accessibility software
