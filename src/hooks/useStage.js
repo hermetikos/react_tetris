@@ -4,6 +4,8 @@ import { createStage } from "../gameHelpers";
 
 export const useStage = (player, resetPlayer) => {
     const [stage, setStage] = useState(createStage());
+    // used to count number of cleared rows (used to compute score)
+    const [rowsCleared, setRowsCleared] = useState(0);
 
     // useEffect is used to allow you to make changes due to side effects
     // basically, hooks try to avoid side effects, but it isn't quite possible
@@ -12,6 +14,28 @@ export const useStage = (player, resetPlayer) => {
     // if you omit the dependancies, this callback will fire after every render
     // otherwise, it will fire after a render IF a dependancy changes
     useEffect(() => {
+        setRowsCleared(0);
+
+        // this function clears out complete rows
+        const sweepRows = newStage => 
+            // we use the reduce method
+            newStage.reduce((acc, row) => {
+                // a row in the stage is filled if all values are greater than 0
+                // so we search the row for 0
+                // if there are no 0s, clear the cell
+                if(row.findIndex(cell => cell[0] === 0) === -1) {
+                    // also increment the number of rows we've cleared
+                    setRowsCleared(prev => prev + 1);
+                    // here we create a new, empty row
+                    // which we use unshift to add it to the top of the stage
+                    acc.unshift(new Array(newStage[0].length).fill([0, 'clear']));
+                    return acc;
+                }
+                // if the row isn't filled, just return the current row
+                acc.push(row);
+                return acc;
+        }, [])
+
         const updateStage = prevStage => {
             // first we clear the stage so we can rewrite new data to it
             const newStage = prevStage.map(row =>
@@ -44,6 +68,9 @@ export const useStage = (player, resetPlayer) => {
             // and bring a new one to the top of the play field
             if (player.collided) {
                 resetPlayer();
+                // additionally, now would be the time where we would check if
+                // we need to clear rows
+                return sweepRows(newStage);
             }
 
             return newStage;

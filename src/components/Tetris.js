@@ -11,6 +11,7 @@ import { StyledTetris, StyledTetrisWrapper } from "./styles/StyledTetris";
 // custom hooks
 import { usePlayer } from "../hooks/usePlayer";
 import { useStage } from "../hooks/useStage";
+import { useInterval } from "../hooks/useInterval";
 
 const Tetris = ({ type }) => {
     // a hook used to alter speed the tetromino drops at
@@ -64,6 +65,7 @@ const Tetris = ({ type }) => {
 
         // clear the stage
         setStage(createStage());
+        setDropTime(1000);
         // bring a new piece to the top of the stage
         resetPlayer();
         // set game over to false
@@ -100,6 +102,11 @@ const Tetris = ({ type }) => {
     const dropPlayer = () => {
         drop();
     }
+
+    // 
+    useInterval(() => {
+        drop();
+    }, dropTime);
 
     return (
         <StyledTetrisWrapper role="button" tabIndex="0"
