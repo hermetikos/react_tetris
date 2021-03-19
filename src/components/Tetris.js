@@ -12,6 +12,7 @@ import { StyledTetris, StyledTetrisWrapper } from "./styles/StyledTetris";
 import { usePlayer } from "../hooks/usePlayer";
 import { useStage } from "../hooks/useStage";
 import { useInterval } from "../hooks/useInterval";
+import { useGameStatus } from "../hooks/useGameStatus";
 
 const Tetris = ({ type }) => {
     // a hook used to alter speed the tetromino drops at
@@ -21,7 +22,10 @@ const Tetris = ({ type }) => {
 
     // get the getters/setters from our custom hooks
     const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
-    const [stage, setStage] = useStage(player, resetPlayer);
+    const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
+    const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
+        rowsCleared
+    );
 
     console.log('re-rendered game');
 
@@ -70,10 +74,20 @@ const Tetris = ({ type }) => {
         resetPlayer();
         // set game over to false
         setGameOver(false);
+        // reset score
+        setScore(0);
+        setRows(0);
+        setLevel(0);
     }
 
     // attempt to drop the tetromino down one level
     const drop = () => {
+        // increase level when player has cleared 10 rows
+        if (rows > (level + 1) * 10) {
+            setLevel(prev => prev + 1);
+            setDropTime(1000 / (level + 1) + 200);
+        }
+
         // if the space below is free...
         if(!checkCollision(player, stage, { x: 0, y: 1})) {
             // move the piece down
@@ -104,7 +118,7 @@ const Tetris = ({ type }) => {
         if(!gameOver) {
             if (keyCode === 40) {
                 console.log("Interval On");
-                setDropTime(1000);
+                setDropTime(1000 / (level + 1) + 200);
             }
         }
     }
@@ -147,9 +161,9 @@ const Tetris = ({ type }) => {
                         <Display gameOver={gameOver} text="Game Over" />
                     ) : (
                         <div>
-                            <Display text="score" />
-                            <Display text="rows" />
-                            <Display text="level" />
+                            <Display text={`score: ${score}`}/>
+                            <Display text={`rows: ${rows}`} />
+                            <Display text={`level: ${level}`} />
                         </div>
                     )}
                     

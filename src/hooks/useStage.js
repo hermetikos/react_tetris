@@ -82,5 +82,5 @@ export const useStage = (player, resetPlayer) => {
 
     // this hook will allow us to both read and alter the stage state
     // so return both the getter and the setter
-    return [stage, setStage];
+    return [stage, setStage, rowsCleared];
 }
