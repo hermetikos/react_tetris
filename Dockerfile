@@ -20,6 +20,7 @@ COPY api/server.js ./api/
 RUN cd api && npm install
 COPY api/server.js ./api/
 
-EXPOSE 3080
+ARG SERVER_PORT=$SERVER_PORT
+# EXPOSE $SERVER_PORT
 
 CMD ["node", "./api/server.js"]
