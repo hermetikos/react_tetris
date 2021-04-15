@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 
 const path = require('path');
 
+const indexRouter = require('./routes/index');
+const scoreRouter = require('./routes/score');
+
 // set up express
 const app = express();
 // set up DB
@@ -15,10 +18,9 @@ port = process.env.SERVER_PORT | 3000;
 
 app.use(express.static(path.join(__dirname, '../app/build')));
 
-// the default action should be to return the UI
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../app/build/index.html'));
-});
+// set up routing
+app.use('/', indexRouter);
+app.use('/score', scoreRouter);
 
 app.listen(port, () => {
     console.log(`Server listening on port::${port}`);
